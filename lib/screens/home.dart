@@ -13,6 +13,9 @@ class _HomeScreenState extends State<HomeScreen> {
     'donor',
   );
 
+  void deleteDonor(docId){
+    donor.doc(docId).delete();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,10 +31,10 @@ class _HomeScreenState extends State<HomeScreen> {
           Navigator.pushNamed(context, '/add');
         },
         shape: const CircleBorder(),
-        backgroundColor: Colors.red,
-        child: const Icon(Icons.add, size: 40, color: Colors.white),
+        backgroundColor: Colors.white,
+        child: const Icon(Icons.add, size: 40, color: Colors.red),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
       body: StreamBuilder<QuerySnapshot>(
         stream: donor.orderBy('name').snapshots(),
         builder: (context, snapshot) {
@@ -110,13 +113,23 @@ class _HomeScreenState extends State<HomeScreen> {
                       Row(
                         children: [
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/update',
+                              arguments: {
+                                'name' : donorSnap['name'],
+                                'phone' : donorSnap['phone'].toString(),
+                                'group' : donorSnap['group'],
+                                'id' : donorSnap.id,
+                              });
+                            },
                             icon: Icon(Icons.edit),
                             iconSize: 30,
                             color: Colors.blue,
                           ),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              deleteDonor(donorSnap.id);
+                            },
                             icon: Icon(Icons.delete),
                             iconSize: 30,
                             color: Colors.red,
